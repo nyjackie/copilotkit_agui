@@ -4,13 +4,18 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TodoList } from "./components/TodoList";
 import { CopilotPanel } from "./components/CopilotPanel";
 import { ToastContainer } from "./components/ToastContainer";
+import { BananaOverlay } from "./components/BananaOverlay";
 import { subscribeTodoToasts } from "./store/toastSubscriptions";
+import { subscribeBananaEaster } from "./store/bananaSubscriptions";
 import "./App.css";
 
 const queryClient = new QueryClient();
 
 function App() {
-  useEffect(() => subscribeTodoToasts(), []);
+  useEffect(() => {
+    const unsubs = [subscribeTodoToasts(), subscribeBananaEaster()];
+    return () => unsubs.forEach((fn) => fn());
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -25,6 +30,7 @@ function App() {
           </div>
         </div>
         <ToastContainer />
+        <BananaOverlay />
       </CopilotKit>
     </QueryClientProvider>
   );
